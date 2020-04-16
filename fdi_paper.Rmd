@@ -1,0 +1,97 @@
+---
+title: "fdi_paper"
+author: "Daniel Shapiro"
+date: "4/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = "~/Russia Matters")
+options(scipen = 999)
+library(tidyverse)
+library(readxl)
+```
+
+```{r readin, message = FALSE, warning = FALSE}
+south_africa <- read_excel("SAPE.xlsx") %>%
+  select(`P/E`) %>%
+  mutate(pe = as.numeric(`P/E`)) %>%
+  head(100)
+
+south_africa[is.na(south_africa)] <- 0
+
+# Changed NAs to equal zero. Figures are listed as NAs in the original data when P/E ratio is negative. Since I'm only looking at medians, not means, I figure that putting them at zero will not affect scores too much.
+
+brazil <- read_excel("BPE.xlsx") %>%
+  select(`P/E`) %>%
+  mutate(pe = as.numeric(`P/E`)) %>%
+  head(100)
+
+brazil[is.na(brazil)] <- 0
+
+russia <- read_excel("RUSSPE.xlsx") %>%
+  select(`P/E`) %>%
+  mutate(pe = as.numeric(`P/E`)) %>%
+  head(100)
+
+russia[is.na(russia)] <- 0
+
+china <- read_excel("CPE.xlsx") %>%
+  select(`P/E`) %>%
+  mutate(pe = as.numeric(`P/E`)) %>%
+  head(100)
+
+china[is.na(china)] <- 0
+
+india <- read_excel("IPE.xlsx") %>%
+  select(`P/E`) %>%
+  mutate(pe = as.numeric(`P/E`)) %>%
+  head(100)
+
+india[is.na(india)] <- 0
+```
+
+```{r messingaround}
+# Just want to see distributions so I know what I'm working with. Not crucial. 
+
+ggplot(south_africa, aes(x = pe)) +
+  geom_histogram() +
+   scale_x_log10()
+
+ggplot(brazil, aes(x = pe)) +
+  geom_histogram()+
+   scale_x_log10()
+
+ggplot(india, aes(x = pe)) +
+  geom_histogram()+
+   scale_x_log10()
+
+ggplot(russia, aes(x = pe)) +
+  geom_histogram()+
+   scale_x_log10()
+
+ggplot(china, aes(x = pe)) +
+  geom_histogram() +
+  scale_x_log10()
+```
+
+```{r}
+# Summarize medians. Medians mitigate extreme outliers and show general trends better than means.
+
+brazil %>%
+  summarize(bmed = median(pe))
+
+south_africa %>%
+  summarize(smed = median(pe))
+
+russia %>%
+  summarize(rmed = median(pe))
+
+china %>%
+  summarize(cmed = median(pe))
+
+india %>%
+  summarize(imed = median(pe))
+```
+
