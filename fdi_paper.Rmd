@@ -7,14 +7,13 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_knit$set(root.dir = "~/Russia Matters")
 options(scipen = 999)
 library(tidyverse)
 library(readxl)
 ```
 
 ```{r readin, message = FALSE, warning = FALSE}
-south_africa <- read_excel("SAPE.xlsx") %>%
+south_africa <- read_excel("raw-data/SAPE.xlsx") %>%
   select(`P/E`) %>%
   mutate(pe = as.numeric(`P/E`)) %>%
   head(100)
@@ -23,28 +22,28 @@ south_africa[is.na(south_africa)] <- 0
 
 # Changed NAs to equal zero. Figures are listed as NAs in the original data when P/E ratio is negative. Since I'm only looking at medians, not means, I figure that putting them at zero will not affect scores too much.
 
-brazil <- read_excel("BPE.xlsx") %>%
+brazil <- read_excel("raw-data/BPE.xlsx") %>%
   select(`P/E`) %>%
   mutate(pe = as.numeric(`P/E`)) %>%
   head(100)
 
 brazil[is.na(brazil)] <- 0
 
-russia <- read_excel("RUSSPE.xlsx") %>%
+russia <- read_excel("raw-data/RUSSPE.xlsx") %>%
   select(`P/E`) %>%
   mutate(pe = as.numeric(`P/E`)) %>%
   head(100)
 
 russia[is.na(russia)] <- 0
 
-china <- read_excel("CPE.xlsx") %>%
+china <- read_excel("raw-data/CPE.xlsx") %>%
   select(`P/E`) %>%
   mutate(pe = as.numeric(`P/E`)) %>%
   head(100)
 
 china[is.na(china)] <- 0
 
-india <- read_excel("IPE.xlsx") %>%
+india <- read_excel("raw-data/IPE.xlsx") %>%
   select(`P/E`) %>%
   mutate(pe = as.numeric(`P/E`)) %>%
   head(100)
