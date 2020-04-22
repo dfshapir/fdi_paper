@@ -36,13 +36,49 @@ quartinv$TIME <- as.yearqtr(quartinv$TIME)
 ggplot(quartinv, aes(x = TIME, y = Value)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(y = "FDI Inflow, Billions USD",
+  labs(y = "FDI Inflow, Millions USD",
        x = "Quarter",
-       title = "Russian Quarterly FDI Inflow in Billions USD",
+       title = "Russian Quarterly FDI Inflow in Millions USD",
        subtitle = "Data from OECD",
-       caption = "Link to OECD data: https://data.oecd.org/fdi/fdi-flows.htm. OECD measures quarterly data from 2013.")
+       caption = "OECD data can be found at https://data.oecd.org/fdi/fdi-flows.htm. OECD measures quarterly data for Russia from 2013.")
 
 ggsave(filename = "fdi.png")
+```
+
+# Figure 2
+
+```{r fig2}
+bricsfdi <- read_csv("raw-data/DP_LIVE_22042020233939640.csv", col_types = cols(
+  LOCATION = col_character(),
+  INDICATOR = col_character(),
+  SUBJECT = col_character(),
+  MEASURE = col_character(),
+  FREQUENCY = col_character(),
+  TIME = col_double(),
+  Value = col_double(),
+  `Flag Codes` = col_logical()
+)) %>%
+  group_by(LOCATION) %>%
+  mutate(Country = LOCATION) %>%
+  select(-LOCATION)
+
+bricsfdi$Country <- recode(bricsfdi$Country, 
+                           "ZAF" = "South Africa",
+                           "BRA" = "Brazil",
+                           "CHN" = "China",
+                           "IND" = "India",
+                           "RUS" = "Russia")
+
+ggplot(bricsfdi, aes(x = TIME, y = Value, color = Country)) +
+  geom_line() +
+  geom_point() +
+  labs(y = "FDI Inflow, Millions USD",
+       x = "Year",
+       title = "BRICS Countries' Yearly FDI Inflow in Millions USD",
+       subtitle = "Data from OECD",
+       caption = "OECD data can be found at https://data.oecd.org/fdi/fdi-flows.htm. Yearly data measured from 2005.")
+
+ggsave(filename = "bricsfdi.png")
 ```
 
 # P/E
