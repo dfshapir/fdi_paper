@@ -10,8 +10,42 @@ knitr::opts_chunk$set(echo = FALSE)
 options(scipen = 999)
 library(tidyverse)
 library(readxl)
+library(readr)
+library(gsubfn)
+library(zoo)
+```
+# Figure 1
+
+```{r oecddat}
+quartinv <- read_csv("raw-data/DP_LIVE_22042020222930826.csv", col_types = cols(
+  LOCATION = col_character(),
+  INDICATOR = col_character(),
+  SUBJECT = col_character(),
+  MEASURE = col_character(),
+  FREQUENCY = col_character(),
+  TIME = col_character(),
+  Value = col_double(),
+  `Flag Codes` = col_logical()
+))
+
+# Read in CSV
+
+quartinv$TIME <- gsubfn("Q.*", list(`Q1` = 1, `Q2` = 2, `Q3` = 3, `Q4` = 4), quartinv$TIME)
+quartinv$TIME <- as.yearqtr(quartinv$TIME)
+
+ggplot(quartinv, aes(x = TIME, y = Value)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(y = "FDI Inflow, Billions USD",
+       x = "Quarter",
+       title = "Russian Quarterly FDI Inflow in Billions USD",
+       subtitle = "Data from OECD",
+       caption = "Link to OECD data: https://data.oecd.org/fdi/fdi-flows.htm. OECD measures quarterly data from 2013.")
+
+ggsave(filename = "fdi.png")
 ```
 
+# P/E
 ```{r readin, message = FALSE, warning = FALSE}
 south_africa <- read_excel("raw-data/SAPE.xlsx") %>%
   select(`P/E`) %>%
