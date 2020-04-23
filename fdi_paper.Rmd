@@ -81,6 +81,21 @@ ggplot(bricsfdi, aes(x = TIME, y = Value, color = Country)) +
 ggsave(filename = "bricsfdi.png")
 ```
 
+# FDI Stock
+
+```{r fdistoc}
+stock <- read_csv("raw-data/DP_LIVE_23042020170711782.csv", col_types = cols(
+  LOCATION = col_character(),
+  INDICATOR = col_character(),
+  SUBJECT = col_character(),
+  MEASURE = col_character(),
+  FREQUENCY = col_character(),
+  TIME = col_double(),
+  Value = col_double(),
+  `Flag Codes` = col_logical()
+))
+```
+
 # P/E
 ```{r readin, message = FALSE, warning = FALSE}
 south_africa <- read_excel("raw-data/SAPE.xlsx") %>%
