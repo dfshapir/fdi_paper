@@ -13,6 +13,7 @@ library(readxl)
 library(readr)
 library(gsubfn)
 library(zoo)
+library(ggpubr)
 ```
 # Figure 1
 
@@ -84,7 +85,7 @@ ggsave(filename = "bricsfdi.png")
 # FDI Stock
 
 ```{r fdistoc}
-stock <- read_csv("raw-data/DP_LIVE_23042020170711782.csv", col_types = cols(
+stock <- read_csv("raw-data/DP_LIVE_23042020171303158.csv", col_types = cols(
   LOCATION = col_character(),
   INDICATOR = col_character(),
   SUBJECT = col_character(),
@@ -94,6 +95,94 @@ stock <- read_csv("raw-data/DP_LIVE_23042020170711782.csv", col_types = cols(
   Value = col_double(),
   `Flag Codes` = col_logical()
 ))
+
+ggplot(stock, aes(x = TIME, y = Value)) +
+  geom_point() +
+  geom_line() +
+  labs(y = "FDI Stock (Inward), Millions USD",
+       x = "Year",
+       title = "Russian Yearly FDI Stock in Millions USD",
+       subtitle = "Data from OECD",
+       caption = "OECD data can be found at https://data.oecd.org/fdi/fdi-stocks.htm. Yearly data measured from 2005.")
+
+ggsave(filename = "rufdistock.png")
+```
+
+# FDI Stock Comparative w/Brazil, SA
+
+```{r compare}
+stockcomp <- read_csv("raw-data/DP_LIVE_23042020173537182.csv", col_types = cols(
+  LOCATION = col_character(),
+  INDICATOR = col_character(),
+  SUBJECT = col_character(),
+  MEASURE = col_character(),
+  FREQUENCY = col_character(),
+  TIME = col_double(),
+  Value = col_double(),
+  `Flag Codes` = col_logical()
+)) %>%
+  group_by(LOCATION) %>%
+  mutate(Country = LOCATION) %>%
+  select(-LOCATION)
+
+stockcomp$Country <- recode(stockcomp$Country, 
+                           "ZAF" = "South Africa",
+                           "BRA" = "Brazil",
+                           "CHN" = "China",
+                           "IND" = "India",
+                           "RUS" = "Russia")
+
+stock1 <- ggplot(stockcomp, aes(x = TIME, y = Value, color = Country)) +
+  geom_line() +
+  geom_point() +
+  labs(y = "FDI Stock, Millions USD",
+       x = "Year",
+       title = "Russia, S. Africa, Brazil Yearly FDI Stock in Millions USD",
+       subtitle = "Data from OECD",
+       caption = "OECD data can be found at https://data.oecd.org/fdi/fdi-stocks.htm. Yearly data measured from 2005.")
+
+ggsave(stock1, filename = "compstock.png", width = 7.29, height = 4.5)
+
+gdppct <- read_csv("raw-data/DP_LIVE_23042020175352091.csv") %>%
+  group_by(LOCATION) %>%
+  mutate(Country = LOCATION) %>%
+  select(-LOCATION)
+
+gdppct$Country <- recode(gdppct$Country, 
+                           "ZAF" = "South Africa",
+                           "BRA" = "Brazil",
+                           "CHN" = "China",
+                           "IND" = "India",
+                           "RUS" = "Russia")
+
+stock2 <- ggplot(gdppct, aes(x = TIME, y = Value, color = Country)) +
+  geom_line() +
+  geom_point() +
+  labs(y = "FDI Stock as % GDP",
+       x = "Year",
+       title = "BRICS Countries' Yearly FDI Stock As Percent of GDP",
+       subtitle = "Data from OECD")
+
+ggsave(stock2, filename = "stockcomp.png", width = 7.29, height = 4.5)
+```
+
+# Greenfield
+
+```{r greenfield}
+greenf <- read_xlsx("raw-data/greenfield.xlsx")
+
+rusdat <- greenf %>%
+  pivot_longer(-`Destination region/economy`, names_to = "Year", values_to = "Amount") %>%
+  filter(`Destination region/economy` == "Russian Federation")
+
+ggplot(rusdat, aes(x = as.numeric(Year), y = Amount)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year",
+       y = "Value, Millions USD",
+       title = "Value of Announced Greenfield FDI Projects in Russia",
+       subtitle = "Data from UNCTAD",
+       caption = "UN data can be found at: https://unctad.org/en/Pages/DIAE/World%20Investment%20Report/Annex-Tables.aspx")
 ```
 
 # P/E
