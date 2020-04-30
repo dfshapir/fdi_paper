@@ -183,6 +183,8 @@ ggplot(rusdat, aes(x = as.numeric(Year), y = Amount)) +
        title = "Value of Announced Greenfield FDI Projects in Russia",
        subtitle = "Data from UNCTAD",
        caption = "UN data can be found at: https://unctad.org/en/Pages/DIAE/World%20Investment%20Report/Annex-Tables.aspx")
+
+ggsave(filename = "greenf.png")
 ```
 
 # P/E
