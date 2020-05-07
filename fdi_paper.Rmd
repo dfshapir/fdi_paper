@@ -110,7 +110,7 @@ ggsave(filename = "rufdistock.png")
 
 # FDI Stock Comparative w/Brazil, SA
 
-```{r compare}
+```{r compare, message = FALSE}
 stockcomp <- read_csv("raw-data/DP_LIVE_23042020173537182.csv", col_types = cols(
   LOCATION = col_character(),
   INDICATOR = col_character(),
