@@ -270,3 +270,24 @@ india %>%
   summarize(imed = median(pe))
 ```
 
+# Mergers and Acquisitions
+
+```{r}
+manda <- read_excel("raw-data/WIR19_tab07.xlsx")
+
+rudat <- manda %>% 
+  pivot_longer(-`Region/economy`, names_to = "Year", values_to = "Amount")
+
+ggplot(rudat, aes(x = as.numeric(Year), y = Amount, color = `Region/economy`)) +
+  geom_point() +
+  geom_line() +
+  scale_colour_manual(values = c("gray52","gray62", "gray72", "orange","gray82")) +
+  labs(title = "Number of Net Cross-Border M&As by Seller, BRICS",
+       subtitle = "Data from UNCTAD",
+       x = "Year",
+       y = "Number",
+       caption = "Source: https://unctad.org/en/Pages/DIAE/World%20Investment%20Report/Annex-Tables.aspx")
+
+ggsave(filename = "ma.png")
+```
+
