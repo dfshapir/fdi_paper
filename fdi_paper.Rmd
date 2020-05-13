@@ -291,3 +291,19 @@ ggplot(rudat, aes(x = as.numeric(Year), y = Amount, color = `Region/economy`)) +
 ggsave(filename = "ma.png")
 ```
 
+# Equities Market
+
+```{r}
+equity <- read_excel("raw-data/foreign_domestic.xlsx") %>%
+  group_by(Year)
+
+# Data from MOEX investor presentations.
+
+ggplot(equity, aes(x = Year, y = amt_rub, fill = Type)) +
+  geom_col(position = "dodge") +
+  labs(title = "Foreign and Domestic (Retail) Investment in MOEX Equities Market, 2017-2019",
+       subtitle = "Amounts in Trillions of Rubles",
+       y = "Trading Volume (Trillions of Rubles)",
+       caption = "Data from Investor Presenations at https://www.moex.com/s756.")
+```
+
