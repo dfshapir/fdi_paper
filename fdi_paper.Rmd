@@ -305,5 +305,7 @@ ggplot(equity, aes(x = Year, y = amt_rub, fill = Type)) +
        subtitle = "Amounts in Trillions of Rubles",
        y = "Trading Volume (Trillions of Rubles)",
        caption = "Data from Investor Presenations at https://www.moex.com/s756.")
+
+ggsave(filename = "domfor.png")
 ```
 
