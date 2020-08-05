@@ -301,7 +301,7 @@ equity <- read_excel("raw-data/foreign_domestic.xlsx") %>%
 
 ggplot(equity, aes(x = Year, y = amt_rub, fill = Type)) +
   geom_col(position = "dodge") +
-  labs(title = "Foreign and Domestic (Retail) Investment in MOEX Equities Market, 2017-2019",
+  labs(title = "Foreign & Domestic (Retail) Trading Volume in MOEX Equities Market 2013-2019",
        subtitle = "Amounts in Trillions of Rubles",
        y = "Trading Volume (Trillions of Rubles)",
        caption = "Data from Investor Presenations at https://www.moex.com/s756.")
